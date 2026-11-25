@@ -1,0 +1,25 @@
+name: Render Video
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: |
+          unzip -o rizq-video.zip
+          if [ -d "rizq-video" ]; then cd rizq-video; fi
+          npm install
+          npx remotion render src/index.ts Main out/video.mp4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rendered-video
+          path: "**/video.mp4"
+          
